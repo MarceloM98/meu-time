@@ -4,6 +4,9 @@ import { Container } from "./styles";
 import { Header } from "../../components/Header";
 import { Select } from "../../components/Select";
 import { Card } from "../../components/Card";
+import { Table } from "../../components/Table";
+
+import Chart from "chart.js/auto";
 
 import { api } from "../../services/api";
 
@@ -100,7 +103,36 @@ export function Home() {
     );
     const teamInfo = await response.data.response;
     setInfoTeam(teamInfo);
+    setLineup(teamInfo.lineups[0]);
+    const { labels, goals } = dataHandler(teamInfo.goals.for.minute);
+    plotChart(labels, goals);
   }
+
+  function dataHandler(data) {
+    const labels = [];
+    const goals = [];
+    for (const [key, value] of Object.entries(data)) {
+      labels.push(key);
+      goals.push(value.total);
+    }
+    return { labels, goals };
+  }
+
+  async function plotChart(labels, data) {
+    new Chart(document.getElementById("acquisitions"), {
+      type: "bar",
+      data: {
+        labels: labels,
+        datasets: [
+          {
+            label: "Gols por minuto",
+            data: data,
+          },
+        ],
+      },
+    });
+  }
+
 
   useEffect(() => {
     async function teste() {
@@ -136,7 +168,7 @@ export function Home() {
           disabled={disabledTime}
           info={teamsList}
           onChange={(e) => {
-            // getTeamInfo(leagueId, season, e.target.value);
+            getTeamInfo(leagueId, season, e.target.value);
             getTeam(e.target.value, season);
           }}
         ></Select>
@@ -176,8 +208,14 @@ export function Home() {
             </div>
             <div id="info-card">
               <h2>A formação mais utilizada em {season} foi:</h2>
-              <h3>4-2-3-1</h3>
-              <p>usada em: 32 jogos</p>
+              <h3>{lineup.formation}</h3>
+              <p>usada em: {lineup.played} jogos</p>
+            </div>
+            <div className="table-wrapper">
+              <Table info={infoTeam.fixtures} />
+            </div>
+            <div>
+              <canvas id="acquisitions"></canvas>
             </div>
           </>
         ) : null}

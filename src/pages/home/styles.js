@@ -70,6 +70,7 @@ export const Container = styled.div`
     padding: 2rem;
     background-color: ${({ theme }) => theme.COLORS.BACKGROUND};
     h2 {
+      text-align: center;
       font-size: 2rem;
       color: ${({ theme }) => theme.COLORS.ORANGE};
     }
@@ -88,6 +89,10 @@ export const Container = styled.div`
     text-align: center;
     margin-top: 0.1rem solid ${({ theme }) => theme.COLORS.GRAY_100};
     margin-bottom: 0.1rem solid ${({ theme }) => theme.COLORS.GRAY_100};
+  }
+
+  .table-wrapper {
+    margin: 1.5rem;
   }
 
   @media (min-width: 600px) {
