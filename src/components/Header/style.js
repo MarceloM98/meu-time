@@ -16,7 +16,6 @@ export const Container = styled.header`
 
   padding: 0 2rem;
   @media (min-width: 768px) {
-    padding: 0 8rem;
   }
 `;
 
@@ -33,7 +32,6 @@ export const Profile = styled(Link)`
   > div {
     display: flex;
     flex-direction: column;
-    margin-left: 1.6rem;
     line-height: 2.4rem;
 
     span {

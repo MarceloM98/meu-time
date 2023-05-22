@@ -13,7 +13,6 @@ function AuthProvider({ children }) {
           "x-apisports-key": apiKey,
         },
       });
-      console.log(response);
       if (response.data.results != 1) {
         throw new Error();
       }
