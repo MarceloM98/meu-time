@@ -121,7 +121,6 @@ export function Home() {
         const { player } = playerInfo;
         team.push(player);
       });
-      console.log(team);
       setTeam(team);
     } catch {
       alert("ocorreu um erro na requisição!");
