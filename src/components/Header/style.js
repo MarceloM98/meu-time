@@ -15,19 +15,12 @@ export const Container = styled.header`
   justify-content: space-between;
 
   padding: 0 2rem;
-  @media (min-width: 768px) {
-  }
+
 `;
 
 export const Profile = styled(Link)`
   display: flex;
   align-items: center;
-
-  > img {
-    width: 5.6rem;
-    height: 5.6rem;
-    border-radius: 50%;
-  }
 
   > div {
     display: flex;
@@ -41,6 +34,17 @@ export const Profile = styled(Link)`
     strong {
       font-size: 1.8rem;
       color: ${({ theme }) => theme.COLORS.ORANGE};
+    }
+  }
+
+  @media (min-width: 1024px) {
+    >div {
+      span {
+        font-size: 2rem;
+      }
+      strong {
+        font-size: 2.4rem;
+      }
     }
   }
 `;

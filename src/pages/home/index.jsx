@@ -24,88 +24,122 @@ export function Home() {
   const [disabledLiga, setDisabledLiga] = useState(true);
   const [disabledTemporada, setDisabledTemporada] = useState(true);
   const [disabledTime, setDisabledTime] = useState(true);
+  const [chart, setChart] = useState();
 
   async function getCountries() {
     const localCountries = localStorage.getItem("@meuTime:countries");
     if (!localCountries) {
-      const response = await api.get("/countries");
+      try {
+        const response = await api.get("/countries");
 
-      const countries = await response.data.response;
-      localStorage.setItem("@meuTime:countries", JSON.stringify(countries));
+        const countries = await response.data.response;
+        localStorage.setItem("@meuTime:countries", JSON.stringify(countries));
 
-      return setCountryList(countries);
+        return setCountryList(countries);
+      } catch {
+        alert("ocorreu um erro na requisição!");
+      }
     }
 
     setCountryList(JSON.parse(localCountries));
   }
 
   async function getLeagues(country) {
-    const leagueList = [];
-    const response = await api.get(`/leagues?country=${country}`);
-    const responseBody = await response.data.response;
-    responseBody.forEach((league) => {
-      const obj = {
-        id: league.league.id,
-        name: league.league.name,
-      };
-      leagueList.push(obj);
-    });
-    setLeagueList(leagueList);
-    setDisabledLiga(false);
+    if (leagueList) {
+      setDisabledLiga(true);
+      setDisabledTemporada(true);
+      setDisabledTime(true);
+    }
+    try {
+      const leagueList = [];
+      const response = await api.get(`/leagues?country=${country}`);
+      const responseBody = await response.data.response;
+      responseBody.forEach((league) => {
+        const obj = {
+          id: league.league.id,
+          name: league.league.name,
+        };
+        leagueList.push(obj);
+      });
+      setLeagueList(leagueList);
+      setDisabledLiga(false);
+    } catch {
+      alert("ocorreu um erro na requisição!");
+    }
   }
 
   async function getSeasons(league) {
-    const seasons = [];
-    const response = await api.get(`/leagues?id=${league}`);
-    const responseBody = await response.data.response[0].seasons;
-    responseBody.forEach((season) => {
-      const obj = {
-        name: season.year,
-      };
-      seasons.push(obj);
-    });
-    setLeagueId(league);
-    setSeasonList(seasons);
-    setDisabledTemporada(false);
+    try {
+      const seasons = [];
+      const response = await api.get(`/leagues?id=${league}`);
+      const responseBody = await response.data.response[0].seasons;
+      responseBody.forEach((season) => {
+        const obj = {
+          name: season.year,
+        };
+        seasons.push(obj);
+      });
+      setLeagueId(league);
+      setSeasonList(seasons);
+      setDisabledTemporada(false);
+    } catch {
+      alert("ocorreu um erro na requisição!");
+    }
   }
 
   async function getTeams(league, season) {
-    const teams = [];
-    const response = await api.get(`/teams?league=${league}&season=${season}`);
-    const responseBody = await response.data.response;
-    responseBody.forEach((team) => {
-      const obj = {
-        id: team.team.id,
-        name: team.team.name,
-      };
-      teams.push(obj);
-    });
-    setTeamList(teams);
-    setSeason(season);
-    setDisabledTime(false);
+    try {
+      const teams = [];
+      const response = await api.get(
+        `/teams?league=${league}&season=${season}`
+      );
+      const responseBody = await response.data.response;
+      responseBody.forEach((team) => {
+        const obj = {
+          id: team.team.id,
+          name: team.team.name,
+        };
+        teams.push(obj);
+      });
+      setTeamList(teams);
+      setSeason(season);
+      setDisabledTime(false);
+    } catch {
+      alert("ocorreu um erro na requisição!");
+    }
   }
 
   async function getTeam(teamId, season) {
-    const team = [];
-    const response = await api.get(`/players?season=${season}&team=${teamId}`);
-    const responseTeam = await response.data.response;
-    responseTeam.forEach((playerInfo) => {
-      const { player } = playerInfo;
-      team.push(player);
-    });
-    console.log(team);
-    setTeam(team);
+    try {
+      const team = [];
+      const response = await api.get(
+        `/players?season=${season}&team=${teamId}`
+      );
+      const responseTeam = await response.data.response;
+      responseTeam.forEach((playerInfo) => {
+        const { player } = playerInfo;
+        team.push(player);
+      });
+      console.log(team);
+      setTeam(team);
+    } catch {
+      alert("ocorreu um erro na requisição!");
+    }
   }
 
   async function getTeamInfo(league, season, teamId) {
-    const response = await api.get(
-      `/teams/statistics?league=${league}&team=${teamId}&season=${season}`
-    );
-    const teamInfo = await response.data.response;
-    setInfoTeam(teamInfo);
-    setLineup(teamInfo.lineups[0]);
-    const { labels, goals } = dataHandler(teamInfo.goals.for.minute);
-    plotChart(labels, goals);
+    try {
+      const response = await api.get(
+        `/teams/statistics?league=${league}&team=${teamId}&season=${season}`
+      );
+      const teamInfo = await response.data.response;
+      setInfoTeam(teamInfo);
+      setLineup(teamInfo.lineups[0]);
+      const { labels, goals } = dataHandler(teamInfo.goals.for.minute);
+      plotChart(labels, goals);
+    } catch {
+      alert("ocorreu um erro na requisição!");
+    }
   }
 
   function dataHandler(data) {
@@ -119,26 +153,53 @@ export function Home() {
   }
 
   async function plotChart(labels, data) {
-    new Chart(document.getElementById("acquisitions"), {
-      type: "bar",
-      data: {
-        labels: labels,
-        datasets: [
-          {
-            label: "Gols por minuto",
-            data: data,
+    if (chart) {
+      chart.destroy();
+    }
+    setChart(
+      new Chart(document.getElementById("acquisitions"), {
+        type: "bar",
+        data: {
+          labels: labels,
+          datasets: [
+            {
+              label: "Gols por minuto",
+              data: data,
+              backgroundColor: "#ff9100c7",
+              borderColor: "#000",
+              border: "2px",
+            },
+          ],
+        },
+        options: {
+          plugins: {
+            customCanvasBackgroundColor: {
+              color: "#3E3B47",
+            },
           },
-        ],
-      },
-    });
+        },
+        plugins: [plugin],
+      })
+    );
   }
 
+  const plugin = {
+    id: "customCanvasBackgroundColor",
+    beforeDraw: (chart, args, options) => {
+      const { ctx } = chart;
+      ctx.save();
+      ctx.globalCompositeOperation = "destination-over";
+      ctx.fillStyle = options.color || "#99ffff";
+      ctx.fillRect(0, 0, chart.width, chart.height);
+      ctx.restore();
+    },
+  };
 
   useEffect(() => {
-    async function teste() {
+    async function asyncFunction() {
       await getCountries();
     }
-    teste();
+    asyncFunction();
   }, []);
 
   return (
@@ -214,7 +275,7 @@ export function Home() {
             <div className="table-wrapper">
               <Table info={infoTeam.fixtures} />
             </div>
-            <div>
+            <div id="canvas-div">
               <canvas id="acquisitions"></canvas>
             </div>
           </>

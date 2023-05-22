@@ -95,6 +95,17 @@ export const Container = styled.div`
     margin: 1.5rem;
   }
 
+  #canvas-div {
+    display: flex;
+    width: 80%;
+    min-height: 30rem;
+    margin: 0 auto;
+    justify-content: center;
+  }
+  #acquisitions {
+    border: 1px solid black;
+  }
+
   @media (min-width: 600px) {
     #filtro {
       display: flex;
@@ -105,12 +116,20 @@ export const Container = styled.div`
         width: 23%;
       }
     }
+    #canvas-div {
+      min-height: 35rem;
+    }
   }
   @media (min-width: 1024px) {
     .team-card-wrapper {
       > div {
         width: 15%;
       }
+    }
+    #canvas-div {
+      width: 70%;
+      margin: 0 auto;
+      min-height: 40rem;
     }
   }
 `;
