@@ -40,7 +40,7 @@ export const Profile = styled(Link)`
     }
     strong {
       font-size: 1.8rem;
-      color: ${({ theme }) => theme.COLORS.WHITE};
+      color: ${({ theme }) => theme.COLORS.ORANGE};
     }
   }
 `;
@@ -51,7 +51,7 @@ export const Logout = styled.button`
 
   > svg {
     color: ${({ theme }) => theme.COLORS.GRAY_100};
-    transition: all .5s;
+    transition: all 0.5s;
     font-size: 36px;
   }
   &:hover {

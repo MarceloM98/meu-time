@@ -1,7 +1,10 @@
-import { Container, Table } from "./styles";
 import { useState, useEffect } from "react";
+
+import { Container } from "./styles";
 import { Header } from "../../components/Header";
 import { Select } from "../../components/Select";
+import { Card } from "../../components/Card";
+
 import { api } from "../../services/api";
 
 export function Home() {
@@ -79,16 +82,24 @@ export function Home() {
     setDisabledTime(false);
   }
 
-  async function getTeam(teamId){
-    const response = await api.get(`/squads?team=${teamId}`)
-    const team = await response.data.response[0].players
-    setTeam(team)
+  async function getTeam(teamId, season) {
+    const team = [];
+    const response = await api.get(`/players?season=${season}&team=${teamId}`);
+    const responseTeam = await response.data.response;
+    responseTeam.forEach((playerInfo) => {
+      const { player } = playerInfo;
+      team.push(player);
+    });
+    console.log(team);
+    setTeam(team);
   }
-  
+
   async function getTeamInfo(league, season, teamId) {
-    const response = await api.get(`/teams/statistics?league=${league}&team=${teamId}&season=${season}`)
-    const teamInfo = await response.data.response
-    setInfoTeam(teamInfo)
+    const response = await api.get(
+      `/teams/statistics?league=${league}&team=${teamId}&season=${season}`
+    );
+    const teamInfo = await response.data.response;
+    setInfoTeam(teamInfo);
   }
 
   useEffect(() => {
@@ -124,10 +135,53 @@ export function Home() {
           title={"Time"}
           disabled={disabledTime}
           info={teamsList}
-          onChange={(e) => getTeamInfo(leagueId, season, e.target.value)}
+          onChange={(e) => {
+            // getTeamInfo(leagueId, season, e.target.value);
+            getTeam(e.target.value, season);
+          }}
         ></Select>
       </div>
-      
+
+      <main>
+        {team ? (
+          <div className="team-wrapper">
+            <h1>Escalação</h1>
+            <div className="team-card-wrapper">
+              {team.map((player, index) => {
+                return (
+                  <div key={index}>
+                    <Card
+                      photo={player.photo}
+                      name={player.name}
+                      age={player.age}
+                      nationality={player.nationality}
+                    ></Card>
+                  </div>
+                );
+              })}
+            </div>
+          </div>
+        ) : (
+          <div id="layout-default">
+            <h1>Escolha um time</h1>
+            <h2 id="sub-title-default">
+              Escalação e estatísticas de todos os times!
+            </h2>
+          </div>
+        )}
+        {infoTeam ? (
+          <>
+            <div id="title-Estatisticas">
+              <h1>Estatísticas</h1>
+            </div>
+            <div id="info-card">
+              <h2>A formação mais utilizada em {season} foi:</h2>
+              <h3>4-2-3-1</h3>
+              <p>usada em: 32 jogos</p>
+            </div>
+          </>
+        ) : null}
+      </main>
     </Container>
   );
 }

@@ -2,7 +2,11 @@ import styled from "styled-components";
 
 export const Container = styled.div`
   display: flex;
-  max-width: 100%;
+  min-width: 50%;
+  @media (min-width: 600px) {
+    min-width: 20%;
+    max-width: 20%;
+  }
 `;
 
 export const SelectStyled = styled.select`
@@ -13,6 +17,7 @@ export const SelectStyled = styled.select`
   padding: 0.4rem;
   text-align: center;
   width: 100%;
+  align-self: center;
   height: 3rem;
   display: flex;
   flex-wrap: wrap;
