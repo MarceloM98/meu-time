@@ -92,7 +92,8 @@ export const Container = styled.div`
   }
 
   .table-wrapper {
-    margin: 1.5rem;
+    margin: 1.5rem auto;
+    width: 90%;
   }
 
   .canvas-div {
@@ -119,7 +120,7 @@ export const Container = styled.div`
         width: 23%;
       }
     }
-    #canvas-div {
+    .canvas-div {
       min-height: 35rem;
     }
   }
@@ -129,7 +130,7 @@ export const Container = styled.div`
         width: 15%;
       }
     }
-    #canvas-div {
+    .canvas-div {
       width: 70%;
       margin: 0 auto;
       min-height: 40rem;

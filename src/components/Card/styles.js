@@ -12,7 +12,7 @@ export const Container = styled.div`
   height: 100%;
   > img {
     width: 100%;
-    border-radius: 10rem;
+    border-radius: 50%;
   }
   > div {
     margin-top: 1rem;

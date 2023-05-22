@@ -138,7 +138,7 @@ export function Home() {
       setLineup(teamInfo.lineups[0]);
       const { labels, goals } = dataHandler(teamInfo.goals.for.minute);
       plotChart(labels, goals);
-      document.querySelector(".hidden").classList.remove("hidden");
+      document.querySelector(".hidden")?.classList.remove("hidden");
     } catch {
       alert("ocorreu um erro na requisição!");
     }
@@ -269,11 +269,13 @@ export function Home() {
             <div id="title-Estatisticas">
               <h1>Estatísticas</h1>
             </div>
-            <div id="info-card">
-              <h2>A formação mais utilizada em {season} foi:</h2>
-              <h3>{lineup.formation}</h3>
-              <p>usada em: {lineup.played} jogos</p>
-            </div>
+            {lineup?.formation ? (
+              <div id="info-card">
+                <h2>A formação mais utilizada em {season} foi:</h2>
+                <h3>{lineup.formation}</h3>
+                <p>usada em: {lineup.played} jogos</p>
+              </div>
+            ) : null}
             <div className="table-wrapper">
               <Table info={infoTeam.fixtures} />
             </div>
