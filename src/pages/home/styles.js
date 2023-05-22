@@ -95,12 +95,15 @@ export const Container = styled.div`
     margin: 1.5rem;
   }
 
-  #canvas-div {
+  .canvas-div {
     display: flex;
     width: 80%;
     min-height: 30rem;
     margin: 0 auto;
     justify-content: center;
+  }
+  .hidden {
+    display: none;
   }
   #acquisitions {
     border: 1px solid black;

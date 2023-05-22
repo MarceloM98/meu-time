@@ -17,6 +17,7 @@ export function Home() {
   const [teamsList, setTeamList] = useState();
   const [team, setTeam] = useState();
   const [infoTeam, setInfoTeam] = useState();
+  const [lineup, setLineup] = useState();
 
   const [leagueId, setLeagueId] = useState();
   const [season, setSeason] = useState();
@@ -137,6 +138,7 @@ export function Home() {
       setLineup(teamInfo.lineups[0]);
       const { labels, goals } = dataHandler(teamInfo.goals.for.minute);
       plotChart(labels, goals);
+      document.querySelector(".hidden").classList.remove("hidden");
     } catch {
       alert("ocorreu um erro na requisição!");
     }
@@ -275,11 +277,11 @@ export function Home() {
             <div className="table-wrapper">
               <Table info={infoTeam.fixtures} />
             </div>
-            <div id="canvas-div">
-              <canvas id="acquisitions"></canvas>
-            </div>
           </>
         ) : null}
+        <div className="canvas-div hidden">
+          <canvas id="acquisitions"></canvas>
+        </div>
       </main>
     </Container>
   );
